@@ -3,6 +3,9 @@
 //ver=0.2.4
 /*
 changelog
+0.2.5(27.05.2016)
+	Workground for Cannot save bug (server side)
+	Must be tested.
 0.2.4(16.02.2016)
 	Prevent sync with initially non-empty cards.
 	Implemented & re multiindex
@@ -57,73 +60,100 @@ if (settings.date == ''){
 
 
 
-if(typeof document.forms['form_kartka'] == "object")
+if(typeof document.forms['form_kartka'] == "object"){
 	if(settings.wasempty){//only cards initially was empty
 
-	object_direction_select.style.left='200px';
-	object_direction_select.style.position='fixed';
-	object_direction_select.getElementsByTagName('table')[0].style.background='#F0F8FF';
-	document.forms[0].elements['doc_name'].tabIndex=1;
-	document.forms[0].elements['number_doc'].tabIndex=2;
-	document.forms[0].elements['keywords'].tabIndex=3;
-	document.forms[0].elements['object_direction'].tabIndex=4;
-	document.forms[0].elements['date_kancelar'].value=settings.date;
-	document.forms[0].elements['date_create'].value=settings.date;
-	document.forms[0].elements['saver_type'].value=saver_type_array[0];
-	document.forms[0].elements['media_type'].value=media_type_array[0];
-	document.forms[0].elements['saver'].value=saver_array[5];
-	document.forms[0].elements['source'].value=source_select_array[5];
-	document.forms[0].elements['secure_sens'].value='-';
-	document.forms[0].elements['date_secure'].value='0';
-	
-	
-	document.getElementsByName('object_direction')[0].onkeypress=function(va){
-		var key=getChar(va);
-		for(i=0;i<object_direction_array.length;i++)if (key==object_direction_array[i].charAt(0)) {
-			object_direction_select.style.display='';
-			object_direction_select.getElementsByTagName('td')[i].style.backgroundColor='black';
-			object_direction_select.getElementsByTagName('td')[i].style.color='#cccccc';
+		object_direction_select.style.left='200px';
+		object_direction_select.style.position='fixed';
+		object_direction_select.getElementsByTagName('table')[0].style.background='#F0F8FF';
+		document.forms[0].elements['doc_name'].tabIndex=1;
+		document.forms[0].elements['number_doc'].tabIndex=2;
+		document.forms[0].elements['keywords'].tabIndex=3;
+		document.forms[0].elements['object_direction'].tabIndex=4;
+		document.forms[0].elements['date_kancelar'].value=settings.date;
+		document.forms[0].elements['date_create'].value=settings.date;
+		document.forms[0].elements['saver_type'].value=saver_type_array[0];
+		document.forms[0].elements['media_type'].value=media_type_array[0];
+		document.forms[0].elements['saver'].value=saver_array[5];
+		document.forms[0].elements['source'].value=source_select_array[5];
+		document.forms[0].elements['secure_sens'].value='-';
+		document.forms[0].elements['date_secure'].value='0';
+		
+		
+		document.getElementsByName('object_direction')[0].onkeypress=function(va){
+			var key=getChar(va);
+			for(i=0;i<object_direction_array.length;i++)if (key==object_direction_array[i].charAt(0)) {
+				object_direction_select.style.display='';
+				object_direction_select.getElementsByTagName('td')[i].style.backgroundColor='black';
+				object_direction_select.getElementsByTagName('td')[i].style.color='#cccccc';
+			};
 		};
-	};
-	document.getElementsByName('object_direction')[0].nextSibling.onkeypress=document.getElementsByName('object_direction')[0].onkeypress;
+		document.getElementsByName('object_direction')[0].nextSibling.onkeypress=document.getElementsByName('object_direction')[0].onkeypress;
 
-	//if no cursor at last
-	ctrl=document.forms['form_kartka'].elements['number_doc'];
-	if(settings.reinited) ctrl.focus();
-	else document.forms['form_kartka'].elements['doc_name'].focus();
-	//ctrl.setSelectionRange(ctrl.value.length,ctrl.value.length);
-	//document.getElementsByName('number_doc')[0].focus();
-	//fix for browsers, who puts text cursot at beginning of field
-	ctrl.onfocus=function(){
-		that=this;
-		setTimeout(function(){that.setSelectionRange(that.value.length,that.value.length);},10);
-	};
-	mininit();
+		//if no cursor at last
+		ctrl=document.forms['form_kartka'].elements['number_doc'];
+		if(settings.reinited) ctrl.focus();
+		else document.forms['form_kartka'].elements['doc_name'].focus();
+		//ctrl.setSelectionRange(ctrl.value.length,ctrl.value.length);
+		//document.getElementsByName('number_doc')[0].focus();
+		//fix for browsers, who puts text cursot at beginning of field
+		ctrl.onfocus=function(){
+			that=this;
+			setTimeout(function(){that.setSelectionRange(that.value.length,that.value.length);},10);
+		};
+		mininit();
 
-	document.forms['form_kartka'].elements['keywords'].onfocus=function(){
-		that=this;
-		setTimeout(function(){that.setSelectionRange(that.value.length,that.value.length);},10);
+		document.forms['form_kartka'].elements['keywords'].onfocus=function(){
+			that=this;
+			setTimeout(function(){that.setSelectionRange(that.value.length,that.value.length);},10);
+		};
+		document.forms['form_kartka'].elements['date_kancelar'].addEventListener('focusout',
+			function(){
+				settings.date=this.value;
+				document.forms['form_kartka'].elements['date_create'].value=settings.date;
+				synccookie(true);
+		});
+		document.forms['form_kartka'].elements['date_create'].addEventListener('focusout',
+			function(){
+				settings.date=this.value;
+				document.forms['form_kartka'].elements['date_kancelar'].value=settings.date;
+				synccookie(true);
+		});
+		document.forms['form_kartka'].getElementsByTagName('center')[1].firstChild.onclick=function(){
+				settings.number[settings.currentindex]++;
+				console.log(settings.number[settings.currentindex]);
+				synccookie(true);
+				document.forms['form_kartka'].submit();
+		};
+		document.forms['form_kartka'].elements['doc_name'].onchange=mininit;
+		document.forms['form_kartka'].elements['number_doc'].onchange=mininit;
 	};
-	document.forms['form_kartka'].elements['date_kancelar'].addEventListener('focusout',
-		function(){
-			settings.date=this.value;
-			document.forms['form_kartka'].elements['date_create'].value=settings.date;
-			synccookie(true);
-	});
-	document.forms['form_kartka'].elements['date_create'].addEventListener('focusout',
-		function(){
-			settings.date=this.value;
-			document.forms['form_kartka'].elements['date_kancelar'].value=settings.date;
-			synccookie(true);
-	});
-	document.forms['form_kartka'].getElementsByTagName('center')[1].firstChild.onclick=function(){
-			settings.number[settings.currentindex]++;
-			console.log(settings.number[settings.currentindex]);
-			synccookie(true);
+
+	if(!settings.wasempty) //Workground for Cannot save bug (server side)
+		document.forms['form_kartka'].getElementsByTagName('center')[1].firstChild.onclick=function(){
+
+			function walk(elem) {
+				var aa=elem.firstChild;
+				while( aa != null ){
+					if(aa != null) {
+						if(typeof aa.name != 'undefined')
+							if(aa.name !=''){fd.append(aa.name,aa.value);}
+						if(aa.hasChildNodes()) walk(aa);
+						aa=aa.nextSibling;
+					}		
+				}
+			}
+			fd=new FormData;
+			walk(document.forms['form_kartka']);
+			xhr=new XMLHttpRequest;
+			xhr.open('POST',form_kartka.action,false);
+			xhr.setRequestHeader('Content-Type', 'text/html;charset=utf-8');
+			xhr.send(fd);
+			form_kartka.action="?q=save.php&act=add&max_row=28994&number_kartka=28994";
+			//wait for xhr.send
+			//setTimeout(,1500)
 			document.forms['form_kartka'].submit();
-	};
-	document.forms['form_kartka'].elements['doc_name'].onchange=mininit;
-	document.forms['form_kartka'].elements['number_doc'].onchange=mininit;
+		}
 
 }
 
@@ -270,3 +300,4 @@ function getChar(event) {
  
   return null; // спец. символ
 }
+
