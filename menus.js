@@ -17,7 +17,7 @@ createmenu(17);
   
   var w=typeof leftside=='undefined' ? '140':leftside.width;
   //flashbanner('ab3',"http://www.clocklink.com/clocks/0001-blue.swf?TimeZone=GMT0200",'',w,w);
-  banners(18); 
+  banners(19); 
   flashbanner('leftb',"http://img.gismeteo.ru/flash/120x80s.swf?city=88394&skin=celsius",'city="88394&skin=celsius"&lang="ru"','120','80');
   var next=document.getElementById('ab3');
   var textlink=document.createElement('a');
@@ -81,6 +81,7 @@ Ddpi.html, 								/img/ddpi.gif,Доступ до публічної інформації,\
 http://www.president.gov.ua/documents/14656.html,img/president_kadr_rezerv.gif,,\
 https://drive.google.com/folderview?id=0Bwx0DxUqa7aMQ3VaeUZ5NUxQNUE&usp=sharing,/img/zemdil.jpg,Оперативна інформація про вільні земельні ділянки які можуть бути передані у власність для ведення особисто селянського господарства на території Ульяновського району,\
 https://www.youtube.com/watch?v=SVXExMprAgQ&index=2&list=PLoTL0j-5YwmLDVF9ma78hQipBtbym8w13,/img/krym_ukr.gif,Крим - це Україна,\
+http://zakon2.rada.gov.ua/laws/show/254%D0%BA/96-%D0%B2%D1%80,/img/constitution.gif,Конституція України,\
 /admPosl.html,/img/cnap.jpg,Центр надання адміністративних послуг,\
 /kirovograd75/rzd.pdf,/img/rzd.jpg                    ,,\
 /vyzv.html,/img/70.jpg                                ,,\
